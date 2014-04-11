@@ -1,0 +1,153 @@
+<!--#include virtual="top.html" -->
+<title> Graph Builder - Easy Graphs </title>
+<script>
+
+    
+		var resultArray = ['test'];
+      // Define a callback function to receive the SPARQL JSON result.
+      function myCallback(str) {
+        // Convert result to JSON
+        var jsonObj = eval('(' + str + ')');
+
+        // Build up an array of results.
+		
+		
+		 resultArray = new Array();
+		
+		resultArray[0] = jsonObj.head.vars;
+		
+		
+        for(var i = 0; i <  jsonObj.results.bindings.length; i++) {
+			resultArray[i+1] = new Array();
+			resultArray[i+1][0] = jsonObj.results.bindings[i].Name.value;
+			resultArray[i+1][1] = jsonObj.results.bindings[i].Population.value / 1000;
+        } 
+     }
+      
+     
+	 // load packages
+	 google.load("visualization", "1", {packages:["corechart"]});
+     // function that draws chart
+      function drawChart1() {
+	 var endpoint = document.graphBuilderForm.endPointURI.value;
+      var query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>PREFIX owl: <http://www.w3.org/2002/07/owl#>PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>PREFIX w: <http://sws.ifi.uio.no/ont/world.owl#>PREFIX dbpo: <http://dbpedia.org/ontology/>PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>PREFIX dct: <http://purl.org/dc/terms/>PREFIX fn: <http://www.w3.org/2005/xpath-functions#>PREFIX afn: <http://jena.hpl.hp.com/ARQ/function#>PREFIX npdv: <http://sws.ifi.uio.no/vocab/npd#>PREFIX npdv2: <http://sws.ifi.uio.no/vocab/npd-v2#>PREFIX geos: <http://www.opengis.net/ont/geosparql#>"+document.graphBuilderForm.enterQuery.value ;
+	  
+		// Make the query.
+    sparqlQueryJson(query, endpoint, myCallback, false);
+      
+    //graph selection variable 
+		var item1 = document.getElementById('graphs1').value;
+		
+		
+		var data = google.visualization.arrayToDataTable(document.graphBuilderForm.enterQuery.value);
+
+        var options = {
+          title: document.graphBuilderForm.graphName1.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.graphBuilderForm.chartColour.value],
+		  chartArea:{width:document.graphBuilderForm.chartWidth.value,height:document.graphBuilderForm.chartHeight.value}
+		  };
+            if (item1 == 'bar'){
+			var chart = new google.visualization.BarChart(document.getElementById('chart_div1'));
+        chart.draw(data, options);}
+			else if (item1 == 'pie'){
+			var chart = new google.visualization.PieChart(document.getElementById('chart_div1'));
+        chart.draw(data, options);
+			}
+			else if (item1 == 'column'){
+			var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+        chart.draw(data, options);
+			}
+			else if (item1 == 'area'){
+			var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item1 == 'line'){
+			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			
+      
+	  
+	}
+      
+    </script>
+<h2>Welcome to our Graph Building page where you can build your own graphs from data sources with a SPARQL endpoint.</h2>
+<p>For more information on SPARQL, visit our <a href="info.shtml" style= 'color:#FFF8F0'>SPARQL Information</a> page</p>
+<h3> Note: all queries must be retured on an (x,y) axis for use in a .json format</h3>
+<form name='graphBuilderForm'>
+<table border=0>
+
+	<tr> 
+		<td><b>Enter SPARQL endpoint URI:</b></td>
+		<td><textarea name='endPointURI' rows='1' cols='50'></textarea></td>
+	</tr>
+	<tr>
+		<td><b>Enter your SPARQL query:</b></td>
+		<td><textarea name='enterQuery' rows='10' cols='50'></textarea></td>
+	</tr>
+	<tr>
+		<td><b>Enter graph name:</b></td>
+		<td><textarea name='graphName1' rows='1' cols='50'></textarea></td>
+	</tr>
+	<tr>
+		<td><b>Select graph type:</b></td>
+		<td><select id='graphs1' name='chartType'>
+			<option value='pie'>Pie Chart</option>
+			<option value='bar'>Bar Chart</option>
+			<option value='column'>Column Chart</option>
+			<option value='area'>Area Chart</option>
+			<option value='line'>Line Chart</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Select colour:</b></td>
+		<td><select name='chartColour'>
+			
+			<option value='red' style= "color:red">RED</option>
+			<option value='blue' style= "color:blue">BLUE</option>
+			<option value='green' style= "color:green">GREEN</option>
+			<option value='yellow' style= "color:yellow">Yellow</option>
+			<option value='pink' style= "color:pink">PINK</option>
+			<option value='purple' style= "color:purple">PURPLE</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<tr>
+		
+		<td><b>Select Height:</b></td>
+		<td><select name='chartHeight'>
+		<option value='25%'>Small</option>
+		<option value='50%'>Medium</option>
+		<option value='75%'>Large</option>
+		
+		</select></td>
+	</tr>
+	<tr>
+		<td><b>Select Width:</b></td>
+		<td><select name='chartWidth'>
+		<option value='25%'>Small</option>
+		<option value='50%'>Medium</option>
+		<option value='75%'>Large</option>
+		
+		</select></td>
+		
+		
+		
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type='button' value='SUBMIT(double click me)' style='background:white; width:200px; height:30px; font-weight:900;' 
+		onClick="drawChart1();"></td>
+		<td><input name="b_print" type="button" onClick="printdiv('chart_div');" value=" Print "></td>
+	</tr>
+	</table>
+	
+	<div id="chart_div1" style="width: 900px; height: 500px;"></div>
+	
+	
+	
+	
+<!--#include virtual="bottom.html" -->

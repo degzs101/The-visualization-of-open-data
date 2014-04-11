@@ -1,0 +1,44 @@
+<!--#include virtual="top.html" -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Accordion - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script>
+  $(function() {
+    $( "#accordion" ).accordion();
+  });
+  </script>
+</head>
+<body>
+ 
+<div id="accordion">
+  <h3>What is Sparql? </h3>
+  <div>
+    <p>
+    SPARQL is an RDF query language which allows users to querys different data bases around the world using the semantic web.
+    </p>
+  </div>
+  <h3>Where can I learn to use SPARQL?</h3>
+  <div>
+    <p>
+    <dd><a href="http://www.cambridgesemantics.com/semantic-university/sparql-by-example" target="_blank" style="color:#0000FF;"> Cambridge Semantics SPARQL Tutorial</a></dd></P>
+    </p>
+  </div>
+  <h3>How do i find a database with a SPARQL end-point?</h3>
+  <div>
+    <p>
+   You can use google to find an endpoint which will be related to the area that you wish to query, or you can follow this link to popular websites that have SPARQL endpoints:
+<dd><a href="http://www.w3.org/wiki/SparqlEndpoints" target="_blank" style="color:#0000FF;"> SPARQL end-points</a></dd
+    </p>
+    
+    
+ 
+ 
+ 
+</body>
+</html>
+<!--#include virtual="bottom.html" -->

@@ -1,0 +1,275 @@
+<!--#include virtual="top.html" -->
+<script type="text/javascript">
+     
+		var resultArray = ['test'];
+      // Define a callback function to receive the SPARQL JSON result.
+      function myCallback(str) {
+        // Convert result to JSON
+        var jsonObj = eval('(' + str + ')');
+
+        // Build up an array of results.
+		
+		
+		 resultArray = new Array();
+		
+		resultArray[0] = jsonObj.head.vars;
+		
+		
+        for(var i = 0; i <  jsonObj.results.bindings.length; i++) {
+			resultArray[i+1] = new Array();
+			resultArray[i+1][0] = jsonObj.results.bindings[i].Name.value;
+			resultArray[i+1][1] = jsonObj.results.bindings[i].Population.value / 1000;
+        } 
+     }
+      
+     // Make the query.
+      google.load('visualization', '1', {packages: ['geochart']});
+	  google.load('visualization', '1', {packages:['gauge']});
+      google.load("visualization", "1", {packages:["corechart"]});
+     // function that draws chart
+      function drawChart() {
+	  // variable for the query
+		var item = document.getElementById('selQuery').value;
+		// variable for the graph
+		var item2 = document.getElementById('graphs').value;
+		
+		
+		if (item == 'query1')
+		{
+		var endpoint = "http://sws.ifi.uio.no/sparql/world";
+      var query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>PREFIX owl: <http://www.w3.org/2002/07/owl#>PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>PREFIX w: <http://sws.ifi.uio.no/ont/world.owl#>PREFIX dbpo: <http://dbpedia.org/ontology/>PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>PREFIX dct: <http://purl.org/dc/terms/>PREFIX fn: <http://www.w3.org/2005/xpath-functions#>PREFIX afn: <http://jena.hpl.hp.com/ARQ/function#>PREFIX npdv: <http://sws.ifi.uio.no/vocab/npd#>PREFIX npdv2: <http://sws.ifi.uio.no/vocab/npd-v2#>PREFIX geos: <http://www.opengis.net/ont/geosparql#>SELECT * WHERE{ []  a w:Country ; w:hasName ?Name ; w:hasCountryPopulation ?Population ; } ORDER BY DESC(?Population) LIMIT 10" ;
+	  // Make the query.
+		sparqlQueryJson(query, endpoint, myCallback, false);
+		var data = google.visualization.arrayToDataTable(resultArray);
+		
+        // Query 1
+            if (item2 == 'bar'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.selectionForm.chartColour.value],
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  };
+			var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+        chart.draw(data, options);}
+			else if (item2 == 'pie'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  
+		  };
+			var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'column'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.selectionForm.chartColour.value],
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  };
+			var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'area'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.selectionForm.chartColour.value],
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  };
+			var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'gauge'){
+			var options = {
+			title: document.selectionForm.graphName.value,
+          width: document.selectionForm.chartWidth.value, height: document.selectionForm.chartHeight.value,
+          redFrom: 1200000, redTo: 1500000,
+          yellowFrom:900000, yellowTo: 1200000,
+          minorTicks: 5,
+		  max: 1500000
+        };
+			var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'geo'){
+			var options = {title: document.selectionForm.graphName.value,
+			chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+			};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'line'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.selectionForm.chartColour.value],
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  };
+			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			
+      }
+	  
+		//Query 2
+	   else if (item == 'query2')
+		{
+		var endpoint = "http://sws.ifi.uio.no/sparql/world";
+		var query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>PREFIX owl: <http://www.w3.org/2002/07/owl#>PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>PREFIX w: <http://sws.ifi.uio.no/ont/world.owl#>PREFIX dbpo: <http://dbpedia.org/ontology/>PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>PREFIX dct: <http://purl.org/dc/terms/>PREFIX fn: <http://www.w3.org/2005/xpath-functions#>PREFIX afn: <http://jena.hpl.hp.com/ARQ/function#>PREFIX npdv: <http://sws.ifi.uio.no/vocab/npd#>PREFIX npdv2: <http://sws.ifi.uio.no/vocab/npd-v2#>PREFIX geos: <http://www.opengis.net/ont/geosparql#>SELECT * WHERE{ [] a w:City ; w:hasName ?Name ; w:hasCityPopulation ?Population ; } ORDER BY DESC(?Population) LIMIT 10";
+		sparqlQueryJson(query, endpoint, myCallback, false);
+		var data = google.visualization.arrayToDataTable(resultArray);
+        
+        if (item2 == 'bar'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.selectionForm.chartColour.value],
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  };
+			var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+        chart.draw(data, options);}
+			else if (item2 == 'pie'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  
+		  };
+			var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'column'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.selectionForm.chartColour.value],
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  };
+			var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'area'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.selectionForm.chartColour.value],
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  };
+			var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'gauge'){
+			var options = {
+			title: document.selectionForm.graphName.value,
+          width: document.selectionForm.chartWidth.value, height: document.selectionForm.chartHeight.value,
+          redFrom: 10000, redTo: 12000,
+          yellowFrom:7000, yellowTo: 10000,
+          minorTicks: 5,
+		  max: 12000
+        };
+			var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'geo'){
+			var options = {title: document.selectionForm.graphName.value,
+			chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+			};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+			else if (item2 == 'line'){
+			var options = {
+          title: document.selectionForm.graphName.value,
+          hAxis: {title: 'Note: All Values are in thousands',  titleTextStyle: {color: 'red'}},
+		  colors: [document.selectionForm.chartColour.value],
+		  chartArea:{width:document.selectionForm.chartWidth.value,height:document.selectionForm.chartHeight.value}
+		  };
+			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+			}
+      }
+	  
+	}
+    </script>
+<title> Pre Written - Easy Graphs </title>
+<h2>Welcome to our pre built queries of open data using the Semantic web </h2>
+<form name='selectionForm'>
+<table border=0 style= "align:center">
+	<tr>
+		<td><b>Queries</b></td>
+		<td><select  id= 'selQuery' name='query'>
+			<option value='query1'>Top ten most populated countries in the world</option>
+			<option value='query2'>Top ten most populated cities in the world</option>
+			
+			</select>
+		</td>
+	</tr>
+
+	<tr>
+		<td><b>Graphs</b></td> 
+		<td><select  id='graphs' name='charts'>
+			<option value='pie'>Pie Chart</option>
+			<option value='bar'>Bar Chart</option>
+			<option value='column'>Column Chart</option>
+			<option value='area'>Area Chart</option>
+			<option value='line'>Line Chart</option>
+			<option value='gauge'>Gauge(non-customisable)</option>
+			<option value='geo'>Geo Chart(Country populations only, non-customisable)</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Enter graph name :</b></td>
+		<td><textarea name='graphName' rows='1' cols='50'></textarea></td>
+	</tr>
+	<tr>
+		<td><b>Select colour:</b></td>
+		<td><select name='chartColour'>
+			
+			<option value='red' style= "color:red">RED</option>
+			<option value='blue' style= "color:blue">BLUE</option>
+			<option value='green' style= "color:green">GREEN</option>
+			<option value='yellow' style= "color:yellow">Yellow</option>
+			<option value='pink' style= "color:pink">PINK</option>
+			<option value='purple' style= "color:purple">PURPLE</option>
+			
+			</select>
+		</td>
+	</tr>
+	<tr>
+		
+		<td><b>Select Height:</b></td>
+		<td><select name='chartHeight'>
+		<option value='25%'>Small</option>
+		<option value='50%'>Medium</option>
+		<option value='75%'>Large</option>
+		
+		</select></td>
+	</tr>
+	<tr>
+		<td><b>Select Width:</b></td>
+		<td><select name='chartWidth'>
+		<option value='25%'>Small</option>
+		<option value='50%'>Medium</option>
+		<option value='75%'>Large</option>
+		
+		</select></td>
+		
+		
+		
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type='button' value='SUBMIT(double click me)' style='background:white; width:200px; height:30px; font-weight:900;' 
+		onClick="drawChart();"></td>
+		<td><input name="b_print" type="button" onClick="printdiv('chart_div');" value=" Print "></td>
+	</tr>
+</table>
+</form>
+<div id="chart_div" style="width: 1100px; height: 500px;"></div>
+<!--#include virtual="bottom.html" -->

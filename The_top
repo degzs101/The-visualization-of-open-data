@@ -1,0 +1,78 @@
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>
+
+function sparqlQueryJson(queryStr, endpoint, callback, isDebug) {
+      var querypart = "query=" + escape(queryStr);
+    
+      // Get our HTTP request object.
+      var xmlhttp = null;
+      if(window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest();
+     } else if(window.ActiveXObject) {
+       // Code for older versions of IE, like IE6 and before.
+       xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+     } else {
+       alert('Perhaps your browser does not support XMLHttpRequests?');
+     }
+    
+     // Set up a POST with JSON result format.
+     xmlhttp.open('POST', endpoint, true); // GET can have caching probs, so POST
+     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+     xmlhttp.setRequestHeader("Accept", "application/sparql-results+json");
+    
+     // Set up callback to get the response asynchronously.
+     xmlhttp.onreadystatechange = function() {
+       if(xmlhttp.readyState == 4) {
+         if(xmlhttp.status == 200) {
+           // Do something with the results
+           if(isDebug) alert(xmlhttp.responseText);
+           callback(xmlhttp.responseText);
+         } else {
+           
+         }
+       }
+     };
+     // Send the query to the endpoint.
+     xmlhttp.send(querypart);
+    
+     // Done; now just wait for the callback to be called.
+    };
+	// print function
+   function printdiv(printpage)
+{
+var headstr = "<html><head><title></title></head><body>";
+var footstr = "</body>";
+var newstr = document.all.item(printpage).innerHTML;
+var oldstr = document.body.innerHTML;
+document.body.innerHTML = headstr+newstr+footstr;
+window.print();
+document.body.innerHTML = oldstr;
+return false;
+}
+</script>
+    
+
+</head>
+<body>
+<table id="designTable" border="0" cellspacing="0" cellpadding="30"> 
+<tr> 
+<td colspan="3" width="1280" height= "70" style="vertical-align: top"><br><h1 style="color:black;font-size:50px;text-align:Center;vertical-align:middle;box-shadow: 1px 3px black;font-family:sans-serif;text-shadow: 2px 2px 2px #666666;">The visualization of open data<h1></br></td>
+</tr>
+<tr> 
+ <td width="90" height= "700" style="vertical-align: top">
+ <a href="index.shtml" style= 'color:#FFF8F0'>Home</a>
+ <br></br>
+ <a href="ourQueries.shtml" style= 'color:#FFF8F0'>Visualise data that we have already queried</a>
+<br></br>
+<a href="theirQueries.shtml" style= 'color:#FFF8F0'>Visualise your own data using SPARQL</a>
+
+<br></br>
+<a href="info.shtml"style= 'color:#FFF8F0'>SPARQL Information</a>
+ </td> 
+<td width="1280" height= "700">
